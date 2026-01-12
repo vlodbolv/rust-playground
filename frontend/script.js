@@ -4,6 +4,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const runBtn = document.getElementById('runBtn');
     const clearBtn = document.getElementById('clearBtn');
     const output = document.getElementById('output');
+    const statusBadge = document.getElementById('statusBadge');
+
+    let isOnline = false;
+
+    async function checkStatus() {
+        try {
+            const response = await fetch('/api/status');
+            const data = await response.json();
+            isOnline = data.online;
+            updateStatusBadge();
+        } catch (err) {
+            isOnline = false;
+            updateStatusBadge();
+        }
+    }
+
+    function updateStatusBadge() {
+        if (statusBadge) {
+            statusBadge.textContent = isOnline ? 'Online' : 'Offline';
+            statusBadge.className = `status-badge ${isOnline ? 'online' : 'offline'}`;
+        }
+    }
+
+    checkStatus();
+    setInterval(checkStatus, 30000);
 
     function highlightRust(code) {
         const tokens = [];

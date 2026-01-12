@@ -1,0 +1,189 @@
+nav {
+    margin-top: 10px;
+}
+
+.nav-link {
+    color: #888;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    margin: 0 4px;
+    transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.nav-link.active {
+    color: #f47f20;
+    background: rgba(244, 127, 32, 0.1);
+}
+
+.status-badge {
+    font-size: 0.5em;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-weight: 500;
+    vertical-align: middle;
+    margin-left: 10px;
+}
+
+.status-badge.online {
+    background: rgba(105, 219, 124, 0.2);
+    color: #69db7c;
+}
+
+.status-badge.offline {
+    background: rgba(255, 107, 107, 0.2);
+    color: #ff6b6b;
+}
+
+.status-badge.checking {
+    background: rgba(255, 255, 255, 0.1);
+    color: #888;
+}
+
+.crates-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 20px 0;
+}
+
+.add-crate-section,
+.crates-section {
+    background: #1e1e2e;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.add-crate-section h2,
+.crates-section h2 {
+    margin: 0 0 16px 0;
+    font-size: 1.2rem;
+    color: #ccc;
+}
+
+.add-crate-form {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.add-crate-form input {
+    flex: 1;
+    min-width: 150px;
+    padding: 10px 14px;
+    background: #2a2a3e;
+    border: 1px solid #3a3a4e;
+    border-radius: 6px;
+    color: #e0e0e0;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.add-crate-form input:focus {
+    border-color: #f47f20;
+}
+
+.add-crate-form input::placeholder {
+    color: #666;
+}
+
+.add-btn {
+    padding: 10px 24px;
+    background: linear-gradient(135deg, #f47f20 0%, #e55d0c 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.add-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(244, 127, 32, 0.4);
+}
+
+.add-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.message {
+    margin-top: 12px;
+    font-size: 14px;
+}
+
+.message.success {
+    color: #69db7c;
+}
+
+.message.error {
+    color: #ff6b6b;
+}
+
+.crates-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+}
+
+.crate-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: #2a2a3e;
+    border-radius: 8px;
+    border: 1px solid #3a3a4e;
+    transition: all 0.2s ease;
+}
+
+.crate-card:hover {
+    border-color: #f47f20;
+}
+
+.crate-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.crate-name {
+    font-weight: 600;
+    color: #e0e0e0;
+}
+
+.crate-version {
+    font-size: 12px;
+    color: #888;
+}
+
+.remove-btn {
+    padding: 6px 12px;
+    background: transparent;
+    color: #ff6b6b;
+    border: 1px solid #ff6b6b;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.remove-btn:hover {
+    background: rgba(255, 107, 107, 0.1);
+}
+
+.placeholder {
+    color: #666;
+    font-style: italic;
+    grid-column: 1 / -1;
+}

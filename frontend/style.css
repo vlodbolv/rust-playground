@@ -37,6 +37,53 @@ header h1 {
     font-weight: 400;
 }
 
+nav {
+    margin-top: 10px;
+}
+
+.nav-link {
+    color: #888;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    margin: 0 4px;
+    transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.nav-link.active {
+    color: #f47f20;
+    background: rgba(244, 127, 32, 0.1);
+}
+
+.status-badge {
+    font-size: 0.6em;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-weight: 500;
+    vertical-align: middle;
+    margin-left: 10px;
+}
+
+.status-badge.online {
+    background: rgba(105, 219, 124, 0.2);
+    color: #69db7c;
+}
+
+.status-badge.offline {
+    background: rgba(255, 107, 107, 0.2);
+    color: #ff6b6b;
+}
+
+.status-badge.checking {
+    background: rgba(255, 255, 255, 0.1);
+    color: #888;
+}
+
 main {
     flex: 1;
     display: grid;

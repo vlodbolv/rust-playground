@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rust Playground</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Rust Playground</h1>
+            <p class="subtitle">Offline Rust Code Editor & Runner</p>
+        </header>
+        
+        <main>
+            <div class="editor-section">
+                <div class="section-header">
+                    <span>Code</span>
+                    <button id="runBtn" class="run-btn">
+                        <span class="btn-icon">&#9654;</span> Run
+                    </button>
+                </div>
+                <textarea id="codeEditor" spellcheck="false">fn main() {
+    println!("Hello, Rust Playground!");
+    
+    // Try some Rust code
+    let numbers = vec![1, 2, 3, 4, 5];
+    let sum: i32 = numbers.iter().sum();
+    println!("Sum of {:?} is {}", numbers, sum);
+}</textarea>
+            </div>
+            
+            <div class="output-section">
+                <div class="section-header">
+                    <span>Output</span>
+                    <button id="clearBtn" class="clear-btn">Clear</button>
+                </div>
+                <div id="output" class="output-content">
+                    <span class="placeholder">Click "Run" to execute your code...</span>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <p>Rust Playground - Running completely offline</p>
+        </footer>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

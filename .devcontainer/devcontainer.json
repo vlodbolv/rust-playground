@@ -1,0 +1,19 @@
+{
+  "name": "Rust Playground",
+  "build": {
+    "dockerfile": "../Dockerfile",
+    "context": ".."
+  },
+  "forwardPorts": [8080],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "rust-lang.rust-analyzer",
+        "serayuzgur.crates",
+        "tamasfe.even-better-toml"
+      ]
+    }
+  },
+  "postCreateCommand": "echo 'Rust Playground ready!'",
+  "remoteUser": "root"
+}

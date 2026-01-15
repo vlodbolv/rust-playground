@@ -36,7 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'light') {
             document.body.classList.add('light-theme');
-            themeToggle.checked = true;
         }
     }
 
@@ -47,7 +46,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     loadTheme();
-    themeToggle.addEventListener('change', toggleTheme);
+    if (themeToggle) {
+        themeToggle.addEventListener('click', toggleTheme);
+    }
 
     function highlightRust(code) {
         const tokens = [];

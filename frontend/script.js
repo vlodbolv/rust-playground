@@ -82,14 +82,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         escaped = escaped.replace(/\b(\d+\.?\d*)\b/g, '<span class="hl-number">$1</span>');
 
-        escaped = escaped.replace(/\b([a-z_][a-z0-9_]*)\s*!?\s*\(/gi, (match, name) => {
+        const macros = ['println', 'print', 'format', 'vec', 'panic', 'assert', 'assert_eq', 'assert_ne', 'debug_assert', 'debug_assert_eq', 'todo', 'unimplemented', 'unreachable', 'include', 'include_str', 'include_bytes', 'env', 'concat', 'stringify', 'cfg', 'line', 'column', 'file', 'module_path'];
+        const macroPattern = new RegExp(`\\b(${macros.join('|')})!`, 'g');
+        escaped = escaped.replace(macroPattern, (m) => storeToken(m, 'hl-macro'));
+
+        escaped = escaped.replace(/\b([a-z_][a-z0-9_]*)\s*\(/gi, (match, name) => {
             if (!keywords.includes(name) && !types.includes(name)) {
                 return `<span class="hl-function">${name}</span>(`;
             }
             return match;
         });
-
-        escaped = escaped.replace(/\b(println|print|format|vec|panic|assert|assert_eq|assert_ne|debug_assert|debug_assert_eq|todo|unimplemented|unreachable)!/g, '<span class="hl-macro">$1!</span>');
 
         tokens.forEach(({ placeholder, html }) => {
             escaped = escaped.replace(placeholder, html);

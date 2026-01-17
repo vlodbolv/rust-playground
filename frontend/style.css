@@ -52,42 +52,48 @@ body {
 }
 
 header {
-    text-align: center;
-    padding: 10px 0;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    padding: 0;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px var(--shadow);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
 .header-top {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    gap: 20px;
+    padding: 8px 16px;
+    gap: 16px;
 }
 
 header h1 {
     color: var(--accent);
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     margin: 0;
+    white-space: nowrap;
 }
 
 .theme-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
-    background: #2a2a3e;
-    border: 2px solid #f47f20;
+    width: 34px;
+    height: 34px;
+    background: var(--bg-tertiary);
+    border: 2px solid var(--accent);
     border-radius: 50%;
     cursor: pointer;
-    font-size: 22px;
-    margin-left: 12px;
+    font-size: 18px;
     padding: 0;
     transition: all 0.3s ease;
+    flex-shrink: 0;
 }
 
 .theme-btn:hover {
-    background: #f47f20;
-    transform: scale(1.1);
+    background: var(--accent);
+    transform: scale(1.05);
 }
 
 .icon-moon {
@@ -118,26 +124,28 @@ body.light-theme .icon-sun {
 }
 
 nav {
-    margin-top: 10px;
+    display: flex;
+    gap: 4px;
 }
 
 .nav-link {
     color: var(--text-secondary);
     text-decoration: none;
-    padding: 8px 16px;
-    border-radius: 6px;
-    margin: 0 4px;
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 500;
     transition: all 0.2s ease;
 }
 
 .nav-link:hover {
     color: var(--text-primary);
-    background: rgba(128, 128, 128, 0.1);
+    background: var(--bg-tertiary);
 }
 
 .nav-link.active {
     color: var(--accent);
-    background: rgba(244, 127, 32, 0.1);
+    background: rgba(244, 127, 32, 0.15);
 }
 
 .status-badge {
@@ -478,3 +486,4 @@ body.light-theme .hl-macro {
 body.light-theme .hl-literal {
     color: #986801;
 }
+

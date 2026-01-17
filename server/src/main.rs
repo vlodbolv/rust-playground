@@ -1,7 +1,6 @@
 use actix_files::Files;
 use actix_web::{web, App, HttpResponse, HttpServer};
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 use std::process::Stdio;
 use std::sync::Mutex;
 use tokio::process::Command;

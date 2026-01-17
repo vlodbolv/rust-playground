@@ -227,7 +227,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
 
             if (result.success) {
-                output.textContent = result.output || '(Program completed with no output)';
+                let combined = '';
+                if (result.error) combined += result.error;
+                if (result.output) combined += (combined ? '\n' : '') + result.output;
+                output.textContent = combined || '(Program completed with no output)';
                 output.className = 'output-content success';
             } else {
                 output.textContent = result.error || result.output || 'An error occurred';
@@ -243,3 +246,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+

@@ -100,14 +100,27 @@ document.addEventListener('DOMContentLoaded', () => {
         return escaped;
     }
 
+    const lineNumbers = document.getElementById('lineNumbers');
+
+    function updateLineNumbers() {
+        const lines = codeEditor.value.split('\n').length;
+        let html = '';
+        for (let i = 1; i <= lines; i++) {
+            html += `<span>${i}</span>`;
+        }
+        lineNumbers.innerHTML = html;
+    }
+
     function updateHighlight() {
         highlighted.innerHTML = highlightRust(codeEditor.value) + '\n';
+        updateLineNumbers();
     }
 
     function syncScroll() {
         const pre = document.getElementById('highlighted');
         pre.scrollTop = codeEditor.scrollTop;
         pre.scrollLeft = codeEditor.scrollLeft;
+        lineNumbers.scrollTop = codeEditor.scrollTop;
     }
 
     codeEditor.addEventListener('input', updateHighlight);
@@ -246,4 +259,3 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
-

@@ -4,46 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crate Manager - Rust Playground</title>
-    <link rel="stylesheet" href="style.css?v=3">
-    <link rel="stylesheet" href="crates.css?v=3">
+    <link rel="stylesheet" href="style.css?v=4">
+    <link rel="stylesheet" href="crates.css?v=4">
 </head>
 <body>
     <div class="container">
-        <header>
-            <div class="header-top">
-                <nav>
-                    <a href="index.html" class="nav-link">Editor</a>
-                    <a href="crates.html" class="nav-link active">Crates</a>
-                </nav>
-                <h1>Rust Playground <span id="statusBadge" class="status-badge offline">Checking...</span></h1>
-                <button id="themeToggle" class="theme-btn" title="Toggle theme"><span class="icon-moon">&#9789;</span><span class="icon-sun">&#9728;</span></button>
+        <header class="slim-header">
+            <div class="header-left">
+                <span class="title">Rust Playground</span>
+                <span id="statusBadge" class="status-badge checking">Checking...</span>
             </div>
+            <button id="themeToggle" class="theme-btn" title="Toggle theme"><span class="icon-moon">&#9789;</span><span class="icon-sun">&#9728;</span></button>
         </header>
         
-        <main class="crates-main">
-            <div class="add-crate-section">
-                <h2>Add Crate</h2>
-                <div class="add-crate-form">
-                    <input type="text" id="crateName" placeholder="Crate name (e.g., serde)" />
-                    <input type="text" id="crateVersion" placeholder="Version (optional)" />
-                    <button id="addBtn" class="add-btn">Add Crate</button>
+        <main>
+            <div class="crates-panel">
+                <div class="tabs-header">
+                    <nav class="tabs">
+                        <a href="index.html" class="tab">Editor</a>
+                        <a href="crates.html" class="tab active">Crates</a>
+                    </nav>
                 </div>
-                <p id="addMessage" class="message"></p>
-            </div>
+                
+                <div class="crates-content">
+                    <div class="add-crate-section">
+                        <h3>Add Crate</h3>
+                        <div class="add-crate-form">
+                            <input type="text" id="crateName" placeholder="Crate name (e.g., serde)" />
+                            <input type="text" id="crateVersion" placeholder="Version (optional)" />
+                            <button id="addBtn" class="add-btn">Add Crate</button>
+                        </div>
+                        <p id="addMessage" class="message"></p>
+                    </div>
 
-            <div class="crates-section">
-                <h2>Installed Crates</h2>
-                <div id="cratesList" class="crates-grid">
-                    <p class="placeholder">No crates installed yet</p>
+                    <div class="crates-section">
+                        <h3>Installed Crates</h3>
+                        <div id="cratesList" class="crates-grid">
+                            <p class="placeholder">No crates installed yet</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
-        
-        <footer>
-            <p>Rust Playground - Crate Manager</p>
-        </footer>
     </div>
     
-    <script src="crates.js?v=3"></script>
+    <script src="crates.js?v=4"></script>
 </body>
 </html>

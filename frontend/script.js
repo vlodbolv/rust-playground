@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const runBtn = document.getElementById('runBtn');
     const clearBtn = document.getElementById('clearBtn');
     const output = document.getElementById('output');
+    const profiler = document.getElementById('profiler');
     const statusBadge = document.getElementById('statusBadge');
 
     let isOnline = false;
@@ -175,9 +176,47 @@ document.addEventListener('DOMContentLoaded', () => {
     clearBtn.addEventListener('click', () => {
         output.innerHTML = '<span class="placeholder">Click "Run" to execute your code...</span>';
         output.className = 'output-content';
+        profiler.innerHTML = '<span class="placeholder">Run your code to see timing data...</span>';
     });
 
     formatBtn.addEventListener('click', formatCode);
+
+    function updateProfiler(result) {
+        profiler.innerHTML = '';
+        
+        if (result.compile_time_ms !== undefined && result.compile_time_ms !== null) {
+            const compileSec = (result.compile_time_ms / 1000).toFixed(2);
+            const compileRow = document.createElement('div');
+            compileRow.className = 'profiler-row compile-time';
+            compileRow.innerHTML = `<span class="profiler-label">Compile Time</span><span class="profiler-value">${compileSec} s</span>`;
+            profiler.appendChild(compileRow);
+        }
+        
+        if (result.function_times && result.function_times.length > 0) {
+            const funcHeader = document.createElement('div');
+            funcHeader.className = 'profiler-section-header';
+            funcHeader.textContent = 'Function Timings';
+            profiler.appendChild(funcHeader);
+            
+            result.function_times.forEach(ft => {
+                const funcRow = document.createElement('div');
+                funcRow.className = 'profiler-row function-time';
+                funcRow.innerHTML = `<span class="profiler-label">${ft.name}()</span><span class="profiler-value">${ft.time_ms.toFixed(3)} ms</span>`;
+                profiler.appendChild(funcRow);
+            });
+        }
+        
+        if (result.run_time_ms !== undefined && result.run_time_ms !== null) {
+            const runRow = document.createElement('div');
+            runRow.className = 'profiler-row total';
+            runRow.innerHTML = `<span class="profiler-label">Execution Time</span><span class="profiler-value">${result.run_time_ms} ms</span>`;
+            profiler.appendChild(runRow);
+        }
+        
+        if (profiler.children.length === 0) {
+            profiler.innerHTML = '<span class="placeholder">No timing data available</span>';
+        }
+    }
 
     async function formatCode() {
         const code = codeEditor.value;
@@ -229,22 +268,53 @@ document.addEventListener('DOMContentLoaded', () => {
         output.className = 'output-content';
 
         try {
+            const cratesResponse = await fetch('/api/crates');
+            const cratesData = await cratesResponse.json();
+            const userCrates = cratesData.crates
+                .filter(c => c.version !== 'builtin')
+                .map(c => c.name);
+
             const response = await fetch('/api/run', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ code }),
+                body: JSON.stringify({ code, crates: userCrates }),
             });
 
             const result = await response.json();
+            
+            updateProfiler(result);
 
             if (result.success) {
                 let combined = '';
                 if (result.error) combined += result.error;
                 if (result.output) combined += (combined ? '\n' : '') + result.output;
-                output.textContent = combined || '(Program completed with no output)';
+                
+                output.innerHTML = '';
                 output.className = 'output-content success';
+                
+                if (combined) {
+                    const textDiv = document.createElement('pre');
+                    textDiv.textContent = combined;
+                    output.appendChild(textDiv);
+                }
+                
+                if (result.images && result.images.length > 0) {
+                    const imagesDiv = document.createElement('div');
+                    imagesDiv.className = 'output-images';
+                    result.images.forEach(src => {
+                        const img = document.createElement('img');
+                        img.src = src;
+                        img.className = 'output-image';
+                        imagesDiv.appendChild(img);
+                    });
+                    output.appendChild(imagesDiv);
+                }
+                
+                if (!combined && (!result.images || result.images.length === 0)) {
+                    output.textContent = '(Program completed with no output)';
+                }
             } else {
                 output.textContent = result.error || result.output || 'An error occurred';
                 output.className = 'output-content error';

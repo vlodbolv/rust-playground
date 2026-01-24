@@ -48,15 +48,18 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        cratesList.innerHTML = crates.map(c => `
-            <div class="crate-card" data-name="${c.name}">
-                <div class="crate-info">
-                    <span class="crate-name">${c.name}</span>
-                    <span class="crate-version">v${c.version}</span>
+        cratesList.innerHTML = crates.map(c => {
+            const isBuiltin = c.version === 'builtin';
+            return `
+                <div class="crate-card ${isBuiltin ? 'builtin' : ''}" data-name="${c.name}">
+                    <div class="crate-info">
+                        <span class="crate-name">${c.name}</span>
+                        <span class="crate-version">${isBuiltin ? 'built-in' : 'v' + c.version}</span>
+                    </div>
+                    ${isBuiltin ? '' : `<button class="remove-btn" onclick="removeCrate('${c.name}')">Remove</button>`}
                 </div>
-                <button class="remove-btn" onclick="removeCrate('${c.name}')">Remove</button>
-            </div>
-        `).join('');
+            `;
+        }).join('');
     }
 
     window.removeCrate = async function(name) {

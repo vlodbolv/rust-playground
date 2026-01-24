@@ -4,25 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rust Playground</title>
-    <link rel="stylesheet" href="style.css?v=3">
+    <link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
     <div class="container">
-        <header>
-            <div class="header-top">
-                <nav>
-                    <a href="index.html" class="nav-link active">Editor</a>
-                    <a href="crates.html" class="nav-link">Crates</a>
-                </nav>
-                <h1>Rust Playground <span id="statusBadge" class="status-badge checking">Checking...</span></h1>
-                <button id="themeToggle" class="theme-btn" title="Toggle theme"><span class="icon-moon">&#9789;</span><span class="icon-sun">&#9728;</span></button>
+        <header class="slim-header">
+            <div class="header-left">
+                <span class="title">Rust Playground</span>
+                <span id="statusBadge" class="status-badge checking">Checking...</span>
             </div>
+            <button id="themeToggle" class="theme-btn" title="Toggle theme"><span class="icon-moon">&#9789;</span><span class="icon-sun">&#9728;</span></button>
         </header>
         
         <main>
-            <div class="editor-section">
+            <div class="output-section">
                 <div class="section-header">
-                    <span>Code</span>
+                    <span>Output</span>
+                    <button id="clearBtn" class="clear-btn">Clear</button>
+                </div>
+                <div id="output" class="output-content">
+                    <span class="placeholder">Click "Run" to execute your code...</span>
+                </div>
+            </div>
+            
+            <div class="editor-section">
+                <div class="tabs-header">
+                    <nav class="tabs">
+                        <a href="index.html" class="tab active">Editor</a>
+                        <a href="crates.html" class="tab">Crates</a>
+                    </nav>
                     <div class="btn-group">
                         <button id="formatBtn" class="format-btn">
                             <span class="btn-icon">&#8801;</span> Format
@@ -35,33 +45,44 @@
                 <div class="editor-container">
                     <div id="lineNumbers" class="line-numbers"></div>
                     <pre id="highlighted" aria-hidden="true"><code></code></pre>
-                    <textarea id="codeEditor" spellcheck="false">fn main() {
-    println!("Hello, Rust Playground!");
-    
-    // Try some Rust code
-    let numbers = vec![1, 2, 3, 4, 5];
-    let sum: i32 = numbers.iter().sum();
-    println!("Sum of {:?} is {}", numbers, sum);
-}</textarea>
+                    <textarea id="codeEditor" spellcheck="false">use image::{RgbImage, Rgb};
+
+fn create_gradient(width: u32, height: u32) -> RgbImage {
+    let mut img = RgbImage::new(width, height);
+    for x in 0..width {
+        for y in 0..height {
+            let r = x as u8;
+            let g = y as u8;
+            let b = 128;
+            img.put_pixel(x, y, Rgb([r, g, b]));
+        }
+    }
+    img
+}
+
+fn save_image(img: &RgbImage, filename: &str) {
+    img.save(filename).expect("Failed to save image");
+    println!("Image saved as {}", filename);
+}
+
+fn main() {
+    let img = create_gradient(256, 256);
+    save_image(&img, "output.png");
+}
+
+// All functions are automatically profiled!
+// Check the Profiler panel below for timing data.</textarea>
                 </div>
-            </div>
-            
-            <div class="output-section">
-                <div class="section-header">
-                    <span>Output</span>
-                    <button id="clearBtn" class="clear-btn">Clear</button>
-                </div>
-                <div id="output" class="output-content">
-                    <span class="placeholder">Click "Run" to execute your code...</span>
+                <div class="profiler-section">
+                    <div class="profiler-header">Profiler</div>
+                    <div id="profiler" class="profiler-content">
+                        <span class="placeholder">Run your code to see timing data...</span>
+                    </div>
                 </div>
             </div>
         </main>
-        
-        <footer>
-            <p>Rust Playground - Running completely offline</p>
-        </footer>
     </div>
     
-    <script src="script.js?v=3"></script>
+    <script src="script.js?v=4"></script>
 </body>
 </html>

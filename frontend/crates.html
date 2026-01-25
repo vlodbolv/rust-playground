@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crate Manager - Rust Playground</title>
-    <link rel="stylesheet" href="style.css?v=4">
-    <link rel="stylesheet" href="crates.css?v=4">
+    <link rel="stylesheet" href="style.css?v=5">
+    <link rel="stylesheet" href="crates.css?v=5">
 </head>
 <body>
     <div class="container">
@@ -32,6 +32,11 @@
                         <div class="add-crate-form">
                             <input type="text" id="crateName" placeholder="Crate name (e.g., serde)" />
                             <input type="text" id="crateVersion" placeholder="Version (optional)" />
+                            <input type="text" id="crateFeatures" placeholder="Features (comma-separated, optional)" />
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="defaultFeatures" checked />
+                                <span>Default features</span>
+                            </label>
                             <button id="addBtn" class="add-btn">Add Crate</button>
                         </div>
                         <p id="addMessage" class="message"></p>
@@ -48,6 +53,6 @@
         </main>
     </div>
     
-    <script src="crates.js?v=4"></script>
+    <script src="crates.js?v=5"></script>
 </body>
 </html>

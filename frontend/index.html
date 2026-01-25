@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rust Playground</title>
-    <link rel="stylesheet" href="style.css?v=4">
+    <link rel="stylesheet" href="style.css?v=5">
 </head>
 <body>
     <div class="container">
@@ -20,7 +20,10 @@
             <div class="output-section">
                 <div class="section-header">
                     <span>Output</span>
-                    <button id="clearBtn" class="clear-btn">Clear</button>
+                    <div class="header-btns">
+                        <button id="copyOutputBtn" class="copy-btn" title="Copy output">Copy</button>
+                        <button id="clearBtn" class="clear-btn">Clear</button>
+                    </div>
                 </div>
                 <div id="output" class="output-content">
                     <span class="placeholder">Click "Run" to execute your code...</span>
@@ -34,6 +37,7 @@
                         <a href="crates.html" class="tab">Crates</a>
                     </nav>
                     <div class="btn-group">
+                        <button id="copyCodeBtn" class="copy-btn" title="Copy code">Copy</button>
                         <button id="formatBtn" class="format-btn">
                             <span class="btn-icon">&#8801;</span> Format
                         </button>
@@ -45,29 +49,26 @@
                 <div class="editor-container">
                     <div id="lineNumbers" class="line-numbers"></div>
                     <pre id="highlighted" aria-hidden="true"><code></code></pre>
-                    <textarea id="codeEditor" spellcheck="false">use image::{RgbImage, Rgb};
-
-fn create_gradient(width: u32, height: u32) -> RgbImage {
-    let mut img = RgbImage::new(width, height);
-    for x in 0..width {
-        for y in 0..height {
-            let r = x as u8;
-            let g = y as u8;
-            let b = 128;
-            img.put_pixel(x, y, Rgb([r, g, b]));
-        }
+                    <textarea id="codeEditor" spellcheck="false">fn fibonacci(n: u32) -> u64 {
+    match n {
+        0 => 0,
+        1 => 1,
+        _ => fibonacci(n - 1) + fibonacci(n - 2),
     }
-    img
 }
 
-fn save_image(img: &RgbImage, filename: &str) {
-    img.save(filename).expect("Failed to save image");
-    println!("Image saved as {}", filename);
+fn is_prime(n: u64) -> bool {
+    if n < 2 { return false; }
+    for i in 2..=((n as f64).sqrt() as u64) {
+        if n % i == 0 { return false; }
+    }
+    true
 }
 
 fn main() {
-    let img = create_gradient(256, 256);
-    save_image(&img, "output.png");
+    let fib = fibonacci(20);
+    println!("Fibonacci(20) = {}", fib);
+    println!("Is {} prime? {}", fib, is_prime(fib));
 }
 
 // All functions are automatically profiled!
@@ -83,6 +84,6 @@ fn main() {
         </main>
     </div>
     
-    <script src="script.js?v=4"></script>
+    <script src="script.js?v=5"></script>
 </body>
 </html>

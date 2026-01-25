@@ -16,6 +16,10 @@ struct AppState {
 struct CrateInfo {
     name: String,
     version: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    features: Option<Vec<String>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    default_features: Option<bool>,
 }
 
 #[derive(Deserialize)]
@@ -243,6 +247,8 @@ struct CratesResponse {
 struct AddCrateRequest {
     name: String,
     version: Option<String>,
+    features: Option<Vec<String>>,
+    default_features: Option<bool>,
 }
 
 #[derive(Deserialize)]
@@ -268,12 +274,11 @@ async fn check_status() -> HttpResponse {
 
 fn get_standard_crates() -> Vec<CrateInfo> {
     vec![
-        CrateInfo { name: "std".to_string(), version: "builtin".to_string() },
-        CrateInfo { name: "core".to_string(), version: "builtin".to_string() },
-        CrateInfo { name: "alloc".to_string(), version: "builtin".to_string() },
-        CrateInfo { name: "collections".to_string(), version: "builtin".to_string() },
-        CrateInfo { name: "proc_macro".to_string(), version: "builtin".to_string() },
-        CrateInfo { name: "image".to_string(), version: "0.25".to_string() },
+        CrateInfo { name: "std".to_string(), version: "builtin".to_string(), features: None, default_features: None },
+        CrateInfo { name: "core".to_string(), version: "builtin".to_string(), features: None, default_features: None },
+        CrateInfo { name: "alloc".to_string(), version: "builtin".to_string(), features: None, default_features: None },
+        CrateInfo { name: "collections".to_string(), version: "builtin".to_string(), features: None, default_features: None },
+        CrateInfo { name: "proc_macro".to_string(), version: "builtin".to_string(), features: None, default_features: None },
     ]
 }
 
@@ -337,13 +342,17 @@ async fn add_crate(req: web::Json<AddCrateRequest>, data: web::Data<AppState>) -
                 crates.push(CrateInfo {
                     name: req.name.clone(),
                     version: actual_version.clone(),
+                    features: req.features.clone(),
+                    default_features: req.default_features,
                 });
             }
 
             HttpResponse::Ok().json(serde_json::json!({
                 "success": true,
                 "name": req.name,
-                "version": actual_version
+                "version": actual_version,
+                "features": req.features,
+                "default_features": req.default_features
             }))
         }
         Err(e) => HttpResponse::InternalServerError().json(serde_json::json!({
@@ -495,7 +504,24 @@ async fn run_code(req: web::Json<RunRequest>, data: web::Data<AppState>) -> Http
         
         let mut cargo_toml = String::from("[package]\nname = \"playground\"\nversion = \"0.1.0\"\nedition = \"2021\"\n\n[profile.release]\nincremental = true\n\n[dependencies]\n");
         for c in &sorted_crates {
-            cargo_toml.push_str(&format!("{} = \"{}\"\n", c.name, c.version));
+            let has_features = c.features.as_ref().map(|f| !f.is_empty()).unwrap_or(false);
+            let has_default_features = c.default_features.is_some();
+            
+            if has_features || has_default_features {
+                cargo_toml.push_str(&format!("{} = {{ version = \"{}\"", c.name, c.version));
+                if let Some(false) = c.default_features {
+                    cargo_toml.push_str(", default-features = false");
+                }
+                if let Some(ref features) = c.features {
+                    if !features.is_empty() {
+                        let features_str: Vec<String> = features.iter().map(|f| format!("\"{}\"", f)).collect();
+                        cargo_toml.push_str(&format!(", features = [{}]", features_str.join(", ")));
+                    }
+                }
+                cargo_toml.push_str(" }\n");
+            } else {
+                cargo_toml.push_str(&format!("{} = \"{}\"\n", c.name, c.version));
+            }
         }
         
         if let Err(e) = std::fs::write(format!("{}/Cargo.toml", temp_dir), cargo_toml) {
@@ -690,7 +716,7 @@ async fn run_code(req: web::Json<RunRequest>, data: web::Data<AppState>) -> Http
 }
 
 async fn prewarm_cache() {
-    println!("Pre-warming cargo cache with common crates...");
+    println!("Pre-warming cargo cache...");
     let cache_dir = "/tmp/rust-playground-cache";
     let warmup_dir = "/tmp/rust-playground-warmup";
     
@@ -704,14 +730,9 @@ edition = "2021"
 
 [profile.release]
 incremental = true
-
-[dependencies]
-image = "0.25"
 "#;
     
-    // Use minimal code that imports image to compile dependencies
-    let main_rs = r#"use image::RgbImage;
-fn main() { let _: Option<RgbImage> = None; }"#;
+    let main_rs = r#"fn main() { println!("Hello"); }"#;
     
     let _ = std::fs::write(format!("{}/Cargo.toml", warmup_dir), cargo_toml);
     let _ = std::fs::write(format!("{}/src/main.rs", warmup_dir), main_rs);
@@ -757,7 +778,7 @@ async fn main() -> std::io::Result<()> {
 
     println!("Rust Playground starting on http://0.0.0.0:{}", port);
 
-    HttpServer::new(move || {
+    let server = HttpServer::new(move || {
         App::new()
             .app_data(app_state.clone())
             .route("/api/run", web::post().to(run_code))
@@ -768,7 +789,9 @@ async fn main() -> std::io::Result<()> {
             .route("/api/crates/remove", web::post().to(remove_crate))
             .service(Files::new("/", &frontend_dir).index_file("index.html"))
     })
-    .bind(format!("0.0.0.0:{}", port))?
-    .run()
-    .await
+    .bind(format!("0.0.0.0:{}", port))?;
+    
+    println!("Server ready and accepting connections on port {}", port);
+    
+    server.run().await
 }

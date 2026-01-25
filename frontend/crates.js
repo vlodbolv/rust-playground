@@ -2,6 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const statusBadge = document.getElementById('statusBadge');
     const crateNameInput = document.getElementById('crateName');
     const crateVersionInput = document.getElementById('crateVersion');
+    const crateFeaturesInput = document.getElementById('crateFeatures');
+    const defaultFeaturesCheckbox = document.getElementById('defaultFeatures');
     const addBtn = document.getElementById('addBtn');
     const addMessage = document.getElementById('addMessage');
     const cratesList = document.getElementById('cratesList');
@@ -50,11 +52,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
         cratesList.innerHTML = crates.map(c => {
             const isBuiltin = c.version === 'builtin';
+            let details = isBuiltin ? 'built-in' : 'v' + c.version;
+            if (!isBuiltin) {
+                const extras = [];
+                if (c.default_features === false) {
+                    extras.push('no default features');
+                }
+                if (c.features && c.features.length > 0) {
+                    extras.push('features: ' + c.features.join(', '));
+                }
+                if (extras.length > 0) {
+                    details += ' (' + extras.join(', ') + ')';
+                }
+            }
             return `
                 <div class="crate-card ${isBuiltin ? 'builtin' : ''}" data-name="${c.name}">
                     <div class="crate-info">
                         <span class="crate-name">${c.name}</span>
-                        <span class="crate-version">${isBuiltin ? 'built-in' : 'v' + c.version}</span>
+                        <span class="crate-version">${details}</span>
                     </div>
                     ${isBuiltin ? '' : `<button class="remove-btn" onclick="removeCrate('${c.name}')">Remove</button>`}
                 </div>
@@ -90,13 +105,19 @@ document.addEventListener('DOMContentLoaded', () => {
         addBtn.textContent = 'Adding...';
         addMessage.textContent = '';
 
+        const featuresStr = crateFeaturesInput.value.trim();
+        const features = featuresStr ? featuresStr.split(',').map(f => f.trim()).filter(f => f) : null;
+        const defaultFeatures = defaultFeaturesCheckbox.checked ? null : false;
+
         try {
             const response = await fetch('/api/crates/add', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     name,
-                    version: crateVersionInput.value.trim() || null
+                    version: crateVersionInput.value.trim() || null,
+                    features: features,
+                    default_features: defaultFeatures
                 })
             });
 
@@ -107,6 +128,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 addMessage.className = 'message success';
                 crateNameInput.value = '';
                 crateVersionInput.value = '';
+                crateFeaturesInput.value = '';
+                defaultFeaturesCheckbox.checked = true;
                 loadCrates();
             } else {
                 addMessage.textContent = result.error;

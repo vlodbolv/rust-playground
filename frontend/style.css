@@ -481,7 +481,12 @@ body.light-theme .profiler-row.function-time .profiler-label {
     to { transform: rotate(360deg); }
 }
 
-.clear-btn {
+.header-btns {
+    display: flex;
+    gap: 6px;
+}
+
+.copy-btn, .clear-btn {
     padding: 4px 10px;
     background: transparent;
     color: var(--text-secondary);
@@ -492,9 +497,14 @@ body.light-theme .profiler-row.function-time .profiler-label {
     transition: all 0.2s ease;
 }
 
-.clear-btn:hover {
+.copy-btn:hover, .clear-btn:hover {
     color: var(--text-primary);
     border-color: var(--text-secondary);
+}
+
+.copy-btn.copied {
+    color: var(--success);
+    border-color: var(--success);
 }
 
 .hl-keyword { color: #c678dd; }

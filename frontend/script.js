@@ -3,11 +3,41 @@ document.addEventListener('DOMContentLoaded', () => {
     const highlighted = document.getElementById('highlighted').querySelector('code');
     const runBtn = document.getElementById('runBtn');
     const clearBtn = document.getElementById('clearBtn');
+    const copyCodeBtn = document.getElementById('copyCodeBtn');
+    const copyOutputBtn = document.getElementById('copyOutputBtn');
     const output = document.getElementById('output');
     const profiler = document.getElementById('profiler');
     const statusBadge = document.getElementById('statusBadge');
 
     let isOnline = false;
+
+    async function copyToClipboard(text, btn) {
+        try {
+            await navigator.clipboard.writeText(text);
+            const originalText = btn.textContent;
+            btn.textContent = 'Copied!';
+            btn.classList.add('copied');
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.classList.remove('copied');
+            }, 1500);
+        } catch (err) {
+            console.error('Failed to copy:', err);
+        }
+    }
+
+    if (copyCodeBtn) {
+        copyCodeBtn.addEventListener('click', () => {
+            copyToClipboard(codeEditor.value, copyCodeBtn);
+        });
+    }
+
+    if (copyOutputBtn) {
+        copyOutputBtn.addEventListener('click', () => {
+            const outputText = output.innerText || output.textContent;
+            copyToClipboard(outputText, copyOutputBtn);
+        });
+    }
 
     async function checkStatus() {
         try {
